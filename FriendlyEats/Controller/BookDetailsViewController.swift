@@ -109,7 +109,7 @@ class BookDetailsViewController: FormViewController, MFMailComposeViewController
 //                    cell.view!.transform = CGAffineTransform(rotationAngle: .pi/2)  //rotate image 90
                     
                     DispatchQueue.main.async {
-                        if let retrievedImage = UserDefaults.standard.object(forKey: self.book!.isbn)  {
+                        if let retrievedImage = UserDefaults.standard.object(forKey: self.book!.title)  {
                             let storedImage = UIImage(data: (retrievedImage as! NSData) as Data)
                             cell.view!.image = storedImage!
                         } else {

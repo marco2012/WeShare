@@ -170,6 +170,15 @@ class BooksTableViewController: UIViewController, UITableViewDataSource, UITable
             detailsVC.book = book
         }
     }
+    
+    @IBAction func questionMark(_ sender: UIBarButtonItem) {
+        let message = "This application is useful to byìuy and sell used items"
+        let alert = UIAlertController(title: "Info", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
 }
 
 class RestaurantTableViewCell: UITableViewCell {
@@ -198,7 +207,7 @@ class RestaurantTableViewCell: UITableViewCell {
     self.thumbnailView.image = UIImage.gifImageWithURL("https://www.fcnaustin.com/wp-content/uploads/2018/11/AppleLoading.gif") //loading indicator
 //    self.thumbnailView.transform = CGAffineTransform(rotationAngle: .pi/2) //rotate image 90
     
-        if let retrievedImage = UserDefaults.standard.object(forKey: book.isbn)  {
+        if let retrievedImage = UserDefaults.standard.object(forKey: book.title)  {
             let storedImage = UIImage(data: (retrievedImage as! NSData) as Data)
             self.thumbnailView.image = storedImage!
         } else {

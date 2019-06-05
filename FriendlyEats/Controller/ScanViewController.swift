@@ -82,16 +82,41 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
     }
     
     @IBAction func manuallyAddBtn(_ sender: UIBarButtonItem) {
+        
+        self.form.removeAll()
+        
         if Auth.auth().currentUser != nil { //user is signed in
             let user = Auth.auth().currentUser
-            let book = Book(isbn: "", title: "", author: "", book_description: "", pages: 0, rating: 0.0, image_link: "", publisher: "", publishedDate: "", categories: "", sale: "", address: "", latitude: 0.0, longitude: 0.0, seller: "", price: 0.0, author_phone: 0)
-            book.seller = user?.email
-            self.makeBookForm(book: book)
+            
+            let alert = UIAlertController(title: "Choose the element you want to add", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Book", style: .default , handler:{ (UIAlertAction) in
+                print("User click book button")
+                
+                let book = Book(isbn: "", title: "", author: "", book_description: "", pages: 0, rating: 0.0, image_link: "", publisher: "", publishedDate: "", categories: "", sale: "", address: "", latitude: 0.0, longitude: 0.0, seller: "", price: 0.0, author_phone: 0)
+                book.seller = user?.email
+                self.makeBookForm(book: book)
+                
+            }))
+            alert.addAction(UIAlertAction(title: "Generic item", style: .default , handler:{ (UIAlertAction) in
+                print("User click generic item button")
+                
+                let book = Book(isbn: "", title: "", author: "", book_description: "", pages: 0, rating: 0.0, image_link: "", publisher: "", publishedDate: "", categories: "", sale: "", address: "", latitude: 0.0, longitude: 0.0, seller: "", price: 0.0, author_phone: 0)
+                book.seller = user?.email
+                self.makeItemForm(book: book)
+
+            }))
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler:{ (UIAlertAction)in
+                print("User click Dismiss button")
+            }))
+            self.present(alert, animated: true, completion: {
+                print("completion block")
+            })
+            
         }
     }
     
     
-    //make form
+    //make book form
     private func makeBookForm(book:Book) {
         
         //remove book image
@@ -200,11 +225,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
                 $0.tag = "categories"
 
             }
-            
-//            <<< LabelRow () {
-//                $0.title = "For sale"
-//                $0.value = book.sale
-//            }
+      
             
             <<< IntRow () {
                 $0.title = "Pages"
@@ -247,7 +268,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
                         let author = author_row?.value
                         book.author = author!
                         
-                        let description_row: TextRow? = self?.form.rowBy(tag: "description")
+                        let description_row: TextAreaRow? = self?.form.rowBy(tag: "description")
                         let description = description_row?.value
                         book.book_description = description!
                         
@@ -305,12 +326,178 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
 //                            let jpgImage = UIImageJPEGRepresentation(image_data!, 0.6)
 //                            UserDefaults.standard.set(jpgImage, forKey: book.isbn)
 //                            print(image_data)
-                            BackendAPI().sendImage(isbn: book.isbn, image: image_data!)
+//                            BackendAPI().sendImage(isbn: book.isbn, image: image_data!)
+                            let jpgImage = UIImageJPEGRepresentation(image_data!, 0.6)
+                            UserDefaults.standard.set(jpgImage, forKey: book.title)
+                            UserDefaults.standard.synchronize()
                         }
                         
                         if address_value != "nil" && image_data != nil {
                             //add book to library
                            self?.saveBookToFirebase(book: book)
+                        }
+                        
+                    }
+        }
+        
+        animateScroll = true
+        
+    }
+    
+    // make item form
+    private func makeItemForm(book: Book) {
+        
+        //remove book image
+        self.view.viewWithTag(100)?.removeFromSuperview()
+        
+        //create form
+        form
+            
+            +++ Section("Item details")
+            
+            <<< TextRow () {
+                $0.title = "Name"
+                $0.tag = "name_item"
+            }
+            
+            <<< TextRow () {
+                $0.title = "Category"
+                $0.tag = "category_item"
+                
+            }
+            
+            <<< MyImageRow() { row in
+                row.title = "Item picture"
+                row.sourceTypes = [.Camera , .PhotoLibrary]
+                row.clearAction = .yes(style: UIAlertActionStyle.destructive)
+                row.tag = "image1"
+            }
+            
+            +++ Section("item description")
+            
+            <<< TextAreaRow("description") {
+                $0.textAreaHeight = .dynamic(initialTextViewHeight: 50)
+                $0.tag = "item_description"
+            }
+            
+            +++ Section("Seller info")
+            <<< IntRow(){
+                $0.title = "Seller's number"
+                $0.placeholder = "Seller number"
+                $0.tag = "phone"
+            }
+            
+            <<< DecimalRow(){
+                $0.title = "Item price"
+                $0.tag = "price"
+                let formatter = CurrencyFormatter()
+                formatter.locale = .init(identifier: "it_IT")
+                formatter.numberStyle = .currency
+                $0.formatter = formatter
+            }
+            
+            +++ Section("Location")
+            
+            <<< GooglePlacesTableRow() { row in
+                row.placeFilter?.type = .address    //suggest addresses
+                row.placeholder = "Enter your location"
+                row.tag = "location" // Upon parsing a form you get a nice key if you use a tag
+                row.add(ruleSet: RuleSet<GooglePlace>()) // We can use GooglePlace() as a rule
+                row.validationOptions = .validatesOnChangeAfterBlurred
+                row.cell.textLabel?.textColor = UIColor.black
+                row.cell.textLabel?.numberOfLines = 0
+                }
+                .cellUpdate { cell, row in // Optional
+            }
+            
+            
+            +++ Section()
+
+            <<< DecimalRow() {
+                $0.title = "Rating"
+//                $0.value = book.rating == 0.0 ? Double.random(in: 0.0 ..< 5.0) : item.rating //if rating is 0 create a random rating for the item
+                $0.formatter = DecimalFormatter()
+                $0.useFormatterDuringInput = true
+                $0.disabled = false
+                $0.tag = "rating"
+                
+            }
+            
+            
+            +++ Section()
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "Save to Library"
+                }
+                .onCellSelection { [weak self] (cell, row) in
+                    
+                    book.latitude = 0.0
+                    book.longitude = 0.0
+                    
+                    ViewControllerUtils().showActivityIndicator(uiView: self!.view)
+                    
+                    //ASYNC Operation
+                    DispatchQueue.main.async {
+                        
+                        let name_row: TextRow? = self?.form.rowBy(tag: "name_item")
+                        let name = name_row?.value
+                        book.title = name!
+                        
+                        let category_row: TextRow? = self?.form.rowBy(tag: "category_item")
+                        let category = category_row?.value
+                        book.categories = category!
+                        
+                        let description_row: TextAreaRow? = self?.form.rowBy(tag: "item_description")
+                        let description = description_row?.value
+                        book.book_description = description!
+                        
+                        let phone_row: IntRow? = self?.form.rowBy(tag: "phone")
+                        let phone = phone_row?.value
+                        book.author_phone = phone!
+                        
+                        let price_row: DecimalRow? = self?.form.rowBy(tag: "price")
+                        let price = price_row?.value
+                        book.price = price!
+                        
+                        let rating_row: DecimalRow? = self?.form.rowBy(tag: "rating")
+                        let rating = rating_row?.value
+                        book.rating = rating!
+                        
+                        
+                        let row: GooglePlacesTableRow? = self?.form.rowBy(tag: "location")
+                        let address_value = row?.value.debugDescription
+                        
+                        if address_value == "nil" {
+                            ViewControllerUtils().hideActivityIndicator(uiView: self!.view)
+                            self!.alert(title: "Missing address")
+                        } else {
+                            let address = address_value!.components(separatedBy: "\"")[1]
+                            book.address = address
+                        }
+                        
+                        let row1: MyImageRow? = self?.form.rowBy(tag: "image1")
+                        let image_data = row1?.value
+                        
+                        if image_data == nil {
+                            ViewControllerUtils().hideActivityIndicator(uiView: self!.view)
+                            self!.alert(title: "Take a picture of the item")
+                        } else {
+                            let jpgImage = UIImageJPEGRepresentation(image_data!, 0.6)
+                            UserDefaults.standard.set(jpgImage, forKey: book.title)
+                            UserDefaults.standard.synchronize()
+                            //                            print(image_data)
+                            //BackendAPI().sendImage(isbn: item.isbn, image: image_data!)
+                        }
+                        
+                        if address_value != "nil" && image_data != nil {
+                            //add item to library
+                            self?.saveBookToFirebase(book: book)
+                            
+//                            let decoded  = UserDefaults.standard.data(forKey: "items")
+//                            var decodedItems = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [Item]
+//                            decodedItems.append(item)
+//                            let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: self!.items)
+//                            UserDefaults.standard.set(encodedData, forKey: "items")
+//                            UserDefaults.standard.synchronize()
                         }
                         
                     }
