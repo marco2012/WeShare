@@ -79,6 +79,8 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
     
     @IBAction func clearForm(_ sender: UIBarButtonItem) {
          self.form.removeAll()
+        view.addSubview(someImageView) //This add it the view controller without constraints
+        someImageViewConstraints() //This function is outside the viewDidLoad function that controls the constraints
     }
     
     @IBAction func manuallyAddBtn(_ sender: UIBarButtonItem) {
@@ -157,7 +159,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
             }
             
              +++ Section("Seller info")
-                <<< IntRow(){
+                <<< TextRow(){
                     $0.title = "Seller's number"
                     $0.placeholder = "Seller number"
                     $0.tag = "phone"
@@ -272,9 +274,9 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
                         let description = description_row?.value
                         book.book_description = description!
                         
-                        let phone_row: IntRow? = self?.form.rowBy(tag: "phone")
+                        let phone_row: TextRow? = self?.form.rowBy(tag: "phone")
                         let phone = phone_row?.value
-                        book.author_phone = phone!
+                        book.author_phone = Int(phone!)!
                         
                         let isbn_row: TextRow? = self?.form.rowBy(tag: "isbn")
                         let isbn = isbn_row?.value
@@ -381,7 +383,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
             }
             
             +++ Section("Seller info")
-            <<< IntRow(){
+            <<< TextRow(){
                 $0.title = "Seller's number"
                 $0.placeholder = "Seller number"
                 $0.tag = "phone"
@@ -390,10 +392,6 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
             <<< DecimalRow(){
                 $0.title = "Item price"
                 $0.tag = "price"
-                let formatter = CurrencyFormatter()
-                formatter.locale = .init(identifier: "it_IT")
-                formatter.numberStyle = .currency
-                $0.formatter = formatter
             }
             
             +++ Section("Location")
@@ -450,9 +448,9 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
                         let description = description_row?.value
                         book.book_description = description!
                         
-                        let phone_row: IntRow? = self?.form.rowBy(tag: "phone")
+                        let phone_row: TextRow? = self?.form.rowBy(tag: "phone")
                         let phone = phone_row?.value
-                        book.author_phone = phone!
+                        book.author_phone = Int(phone!)!
                         
                         let price_row: DecimalRow? = self?.form.rowBy(tag: "price")
                         let price = price_row?.value
@@ -518,7 +516,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
         ViewControllerUtils().hideActivityIndicator(uiView: self.view)
         
         //display alert
-        let alert = UIAlertController(title: "Book saved in database", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Item saved in database", message: nil, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default)
         alert.addAction(okAction)
         self.present(alert, animated: true)
@@ -527,7 +525,7 @@ BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate, BarcodeScannerError
     //book image to show when search is empty
     let someImageView: UIImageView = {
         let theImageView = UIImageView()
-        theImageView.image = UIImage(named: "books_drawing")
+        theImageView.image = UIImage(named: "item_drawing")
         theImageView.translatesAutoresizingMaskIntoConstraints = false //You need to call this property so the image is added to your view
         theImageView.tag = 100
         return theImageView

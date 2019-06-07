@@ -33,7 +33,7 @@ class BookDetailsViewController: FormViewController, MFMailComposeViewController
         //create form
         form
             
-            +++ Section("Book details")
+            +++ Section("Item details")
             
             <<< LabelRow () {
                 $0.title = "Title"
@@ -228,28 +228,28 @@ class BookDetailsViewController: FormViewController, MFMailComposeViewController
                     //ASYNC Operation
                     DispatchQueue.main.async {
                     
-//                        let userDefaults = UserDefaults.standard
-//                        var books_purchased = [Book]()
-//
-//                        //read from userdefaults
-//                        if let decoded_purchased  = UserDefaults.standard.object(forKey: "books_purchased") as? Data {
-//                            books_purchased = NSKeyedUnarchiver.unarchiveObject(with: decoded_purchased) as! [Book]
-//                        }
-//
-//                        //add current book if not already there
-//                        if (books_purchased.contains(where: {$0.isbn == self!.book!.isbn})) {
-//                            self!.alert(title: "Book already purchased")
-//                        } else {
-//                            books_purchased.append(self!.book!)
-//                        }
-//
-//                        //save to userdefaults
-//                        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: books_purchased)
-//                        userDefaults.set(encodedData, forKey: "books_purchased")
-//                        userDefaults.synchronize()
+                        let userDefaults = UserDefaults.standard
+                        var books_purchased = [Book]()
+
+                        //read from userdefaults
+                        if let decoded_purchased  = UserDefaults.standard.object(forKey: "books_purchased") as? Data {
+                            books_purchased = NSKeyedUnarchiver.unarchiveObject(with: decoded_purchased) as! [Book]
+                        }
+
+                        //add current book if not already there
+                        if (books_purchased.contains(where: {$0.isbn == self!.book!.isbn})) {
+                            self!.alert(title: "Book already purchased")
+                        } else {
+                            books_purchased.append(self!.book!)
+                        }
+
+                        //save to userdefaults
+                        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: books_purchased)
+                        userDefaults.set(encodedData, forKey: "books_purchased")
+                        userDefaults.synchronize()
                         
                         //BACKEND
-                        BackendAPI().purchase(book: self!.book!, seller: (Auth.auth().currentUser?.email)!)
+//                        BackendAPI().purchase(book: self!.book!, seller: (Auth.auth().currentUser?.email)!)
                         
                     }
                     
