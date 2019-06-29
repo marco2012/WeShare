@@ -172,11 +172,23 @@ class BooksTableViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func questionMark(_ sender: UIBarButtonItem) {
-        let message = "This application is useful to buy and sell used items"
+        let message =
+        """
+        The main tasks in our application are: 
+        - the user can buy an article
+        - the user can sell an article
+        - the user can view a map with AR
+        - the user change user info
+        """
         let alert = UIAlertController(title: "Info", message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    @IBAction func faqButton(_ sender: UIBarButtonItem) {
+        
+    }
+    
     
     
 }

@@ -73,7 +73,7 @@
                                                     <color key="textColor" white="0.0" alpha="0.54000000000000004" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TKh-Sa-3TN" customClass="ImmutableStarsView" customModule="FriendlyEats" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TKh-Sa-3TN" customClass="ImmutableStarsView" customModule="FriendlyEats" customModuleProvider="target">
                                                     <rect key="frame" x="116" y="56" width="100" height="20"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -95,7 +95,7 @@
                                                 <constraint firstItem="hPa-m8-4Ol" firstAttribute="top" secondItem="r68-G7-Z5a" secondAttribute="topMargin" constant="-4" id="fCR-Gj-eob"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="Yfl-Cs-75Y" secondAttribute="trailing" constant="8" id="gnG-UM-bji"/>
                                                 <constraint firstItem="EfY-Pa-M4b" firstAttribute="bottom" secondItem="cKd-hu-eLf" secondAttribute="bottom" constant="-5" id="klt-3U-oWd"/>
-                                                <constraint firstItem="TKh-Sa-3TN" firstAttribute="top" secondItem="hPa-m8-4Ol" secondAttribute="bottom" constant="3" id="nyT-c0-maw"/>
+                                                <constraint firstItem="TKh-Sa-3TN" firstAttribute="top" secondItem="hPa-m8-4Ol" secondAttribute="bottom" constant="29.5" id="nyT-c0-maw"/>
                                                 <constraint firstItem="TKh-Sa-3TN" firstAttribute="leading" secondItem="cKd-hu-eLf" secondAttribute="trailing" constant="8" id="weE-Hc-Wnf"/>
                                                 <constraint firstItem="sZS-jl-RH4" firstAttribute="centerY" secondItem="EfY-Pa-M4b" secondAttribute="centerY" id="yBr-Eh-Md1"/>
                                             </constraints>
@@ -165,11 +165,19 @@
                                 <action selector="didTapFilterButton:" destination="BYZ-38-t0r" id="zyt-7d-eFu"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="question" id="hat-kL-bOF">
-                            <connections>
-                                <action selector="questionMark:" destination="BYZ-38-t0r" id="dhp-jS-g0l"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="FAQ" id="CWK-tr-yhu">
+                                <connections>
+                                    <action selector="faqButton:" destination="BYZ-38-t0r" id="2xO-U4-BXQ"/>
+                                    <segue destination="Ith-YE-jKM" kind="show" id="0KS-S7-xEv"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="question" id="hat-kL-bOF">
+                                <connections>
+                                    <action selector="questionMark:" destination="BYZ-38-t0r" id="dhp-jS-g0l"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="activeFiltersStackView" destination="7u1-C1-6cU" id="XsZ-7M-9vP"/>
@@ -630,6 +638,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uue-Ng-Tzg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="957.60000000000002" y="69.715142428785612"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Hq3-PZ-lfi">
+            <objects>
+                <viewController id="Ith-YE-jKM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gVQ-tO-NtX"/>
+                        <viewControllerLayoutGuide type="bottom" id="shb-cC-rBs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="A3n-LC-ctP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LW8-GE-lLH">
+                                <rect key="frame" x="16" y="124" width="343" height="499"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">1. How do i buy an item?
+Click on the chosen item in the list of available items and decide how to contact the seller. Then click on "purchase".
+
+2. How do I sell an item?
+Click on "+" or the barcode icon and decide if you want to use the barcode api for automatic details or add them manually.
+
+3. How do I use the AR?
+Open map section and click on "AR" button.
+
+4. How do I change my settings?
+Go on user section and there you can change password,delete the account and execute all the available actions.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7C7-tw-uHV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1901.5999999999999" y="69.715142428785612"/>
         </scene>
         <!--User-->
         <scene sceneID="9II-lq-rov">
